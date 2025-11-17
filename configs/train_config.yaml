@@ -1,0 +1,50 @@
+# TFGuard YOLO Training Configuration
+
+# Model settings
+model:
+  name: "yolov8n"  # yolov8n, yolov8s, yolov8m, yolov8l, yolov8x
+  pretrained: true
+  nc: 4  # number of classes: helmet, vest, shoes, no_ppe
+
+# Class names for PPE detection
+names:
+  0: "helmet"
+  1: "safety_vest" 
+  2: "safety_shoes"
+  3: "no_ppe"
+
+# Dataset paths
+data:
+  train: "data/train_images"
+  val: "data/val_images"
+  test: "data/test_images"
+  
+# Training parameters
+train:
+  epochs: 100
+  batch_size: 16
+  img_size: 640
+  patience: 20  # early stopping patience
+  
+  # Optimizer settings
+  optimizer: "AdamW"
+  lr0: 0.01  # initial learning rate
+  lrf: 0.01  # final OneCycleLR learning rate (lr0 * lrf)
+  momentum: 0.937
+  weight_decay: 0.0005
+  warmup_epochs: 3.0
+  warmup_momentum: 0.8
+  warmup_bias_lr: 0.1
+
+# Output settings
+output:
+  save_dir: "models"
+  name: "ppe_detection"
+  exist_ok: false
+  
+# Device settings
+device: ""  # auto-detect, or specify: 0,1,2,3 or cpu
+
+# Logging
+verbose: true
+save_period: -1  # Log model after every "save_period" epochs. disabled if < 1
