@@ -42,8 +42,7 @@ venv.bak/
 .ipynb_checkpoints
 
 # Machine Learning
-
-*.pth
+models/*.pth
 *.pt
 *.h5
 *.hdf5
@@ -58,12 +57,17 @@ mlruns/
 tensorboard/
 
 # Data
-
-
+data/raw/
+data/processed/
+data/train/
+data/val/
+data/test/
+*.csv
+*.json
+*.xml
+*.txt
 !requirements.txt
 !README.md
-
-d
 
 # OS
 .DS_Store
