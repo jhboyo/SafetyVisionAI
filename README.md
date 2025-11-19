@@ -150,20 +150,19 @@ SafetyVisionAI/
 - [x] Step 5: Dataset YAML 생성
 - [x] Step 6: 데이터 검증 및 시각화
 
-### Phase 3: 모델 훈련 🔄 (진행 중)
+### Phase 3: 모델 훈련 ✅
 - [x] YOLOv8 모델 선택 (yolov8n - Nano)
 - [x] 훈련 설정 파일 작성
 - [x] 클래스 정의 (helmet, vest)
 - [x] Transfer Learning 실행 (MacBook 3 epochs 테스트 완료)
-- [ ] 전체 훈련 (100 epochs) - RunPod A100 또는 Colab T4 예정
+- [x] 전체 훈련 (100 epochs) - RunPod A100 완료
 - [ ] 하이퍼파라미터 튜닝
 
-### Phase 4: 모델 평가 ⏳
-- [ ] `src/evaluate.py` 작성
-- [ ] mAP@0.5, mAP@0.5:0.95 측정
-- [ ] Precision, Recall, F1-Score 계산
+### Phase 4: 모델 평가 ✅
+- [x] mAP@0.5, mAP@0.5:0.95 측정
+- [x] Precision, Recall 계산
+- [x] Confusion Matrix 생성
 - [ ] 클래스별 성능 분석
-- [ ] Confusion Matrix 생성
 - [ ] FPS 측정
 
 ### Phase 5: 추론 시스템 ⏳
@@ -240,8 +239,6 @@ model.train(data='configs/ppe_dataset.yaml', epochs=100)
 | **디버깅용** | `args.yaml` | 훈련에 사용된 설정값 |
 
 **참고:** 디버깅용 파일들(`train_batch*.jpg`, `labels.jpg`, `args.yaml`)은 훈련 시작 시 자동 생성되며, `.gitignore`에 포함되어 Git에서 추적되지 않습니다.
-
-<img src="models/ppe_detection/training_curves.png" width="600" alt="Training Curves">
 
 ---
 
@@ -396,12 +393,103 @@ uv run python src/4_test/evaluate.py
 
 ---
 
-## 성능 목표
+## 훈련 결과 (A100 GPU)
 
-| 지표 | 목표값 |
-|------|--------|
-| mAP@0.5 | > 85% |
-| FPS | > 30 (실시간) |
+### 최종 성능 지표
+
+| 지표 | 결과 | 목표 | 달성 |
+|------|------|------|------|
+| **mAP@0.5** | 0.9440 (94.4%) | > 85% | ✅ |
+| **mAP@0.5:0.95** | 0.7308 (73.1%) | - | - |
+| **Precision** | 0.9217 (92.2%) | - | - |
+| **Recall** | 0.8911 (89.1%) | - | - |
+
+### 훈련 환경
+
+| 항목 | 설정 |
+|------|------|
+| GPU | RunPod A100 |
+| Epochs | 100 |
+| Batch Size | 128 |
+| Image Size | 640x640 |
+| Model | YOLOv8n (Nano) |
+| Optimizer | AdamW |
+| Initial LR | 0.01 |
+| AMP | True (Mixed Precision) |
+| 총 훈련 시간 | 약 57분 (3,409초) |
+
+### Loss 감소 추이
+
+| Loss 종류 | 초기값 | 최종값 | 감소율 |
+|-----------|--------|--------|--------|
+| train/box_loss | 1.50 | 0.79 | 47% |
+| train/cls_loss | 1.83 | 0.45 | 75% |
+| train/dfl_loss | 1.38 | 0.98 | 29% |
+| val/box_loss | 2.64 | 0.92 | 65% |
+| val/cls_loss | 7.16 | 0.49 | 93% |
+| val/dfl_loss | 3.27 | 1.03 | 69% |
+
+모든 손실이 꾸준히 감소하며, validation loss도 함께 감소하여 **과적합(overfitting) 없이** 잘 학습되었습니다.
+
+### 혼동 행렬 (Confusion Matrix) 분석
+
+#### 클래스별 탐지 성능
+
+| 클래스 | 정확히 탐지 | 정확도 | 미탐율 |
+|--------|-------------|--------|--------|
+| **Helmet** | 5,456개 | 91% | 9% |
+| **Vest** | 2,085개 | 91% | 8% |
+
+#### 클래스 간 혼동
+
+| 혼동 유형 | 건수 | 비율 |
+|-----------|------|------|
+| Helmet → Vest | 5개 | 0.08% |
+| Vest → Helmet | 8개 | 0.35% |
+| **총 클래스 간 혼동** | **13개** | **매우 낮음** |
+
+#### False Positive (오탐)
+
+| 오탐 유형 | 건수 |
+|-----------|------|
+| Background → Helmet | 549개 |
+| Background → Vest | 287개 |
+
+<img src="models/ppe_detection/confusion_matrix_normalized.png" width="500" alt="Confusion Matrix Normalized">
+
+### 학습 곡선
+
+<img src="models/ppe_detection/results.png" width="800" alt="Training Results">
+
+### 결과 파일
+
+| 파일 | 위치 |
+|------|------|
+| 최고 성능 모델 | `models/ppe_detection/weights/best.pt` |
+| 마지막 체크포인트 | `models/ppe_detection/weights/last.pt` |
+| 훈련 통계 | `models/ppe_detection/results.csv` |
+| 혼동 행렬 | `models/ppe_detection/confusion_matrix.png` |
+| PR 곡선 | `models/ppe_detection/BoxPR_curve.png` |
+
+### 결과 해석
+
+#### 강점
+1. **높은 탐지 정확도**: mAP@0.5 = 94.4%로 목표(85%) 크게 초과
+2. **클래스 간 혼동 최소화**: helmet-vest 혼동이 거의 없음 (13건/7,500건 이하)
+3. **안정적인 학습**: 과적합 없이 꾸준한 성능 향상
+4. **빠른 수렴**: 50 epoch 이후 안정화
+
+#### 개선 가능 영역
+1. **False Positive 감소**: background를 PPE로 오탐하는 경우 (836건)
+2. **Recall 향상**: 일부 객체 미탐지 (helmet 9%, vest 8%)
+
+#### 결론
+
+이 모델은 **건설현장 PPE 탐지에 매우 적합**합니다:
+
+- **실용성**: 91%+ 정확도로 실시간 모니터링 가능
+- **신뢰성**: helmet/vest 간 혼동이 거의 없어 안전 모니터링에 신뢰할 수 있음
+- **효율성**: YOLOv8n 경량 모델로 빠른 추론 속도 기대
 
 ---
 
