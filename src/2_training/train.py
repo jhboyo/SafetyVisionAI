@@ -1,15 +1,9 @@
 """
 YOLOv8 모델 훈련 스크립트
 
-<<<<<<< HEAD
-## 이 스크립트란?
-YOLOv8 모델을 PPE 데이터셋으로 훈련시키는 메인 훈련 스크립트입니다.
-Transfer Learning을 사용하여 COCO 사전학습 가중치에서 시작합니다.
-=======
 ## 이 스크립트는?
 YOLOv8 모델을 PPE 데이터셋으로 훈련하는 메인 훈련 스크립트입니다.
 Transfer Learning을 활용하여 COCO 사전학습 가중치를 사용합니다.
->>>>>>> 4c2dc88 (macbook에서 epoch 3 훈련 완료)
 
 ## 사용 방법
 ```bash
