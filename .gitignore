@@ -44,6 +44,9 @@ venv.bak/
 # Machine Learning
 models/*.pth
 *.pt
+models/*/args.yaml
+models/*/*.jpg
+models/*/labels.jpg
 *.h5
 *.hdf5
 *.pkl
