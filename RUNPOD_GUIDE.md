@@ -65,8 +65,12 @@ cat .env
 # huggingface-hub CLI 설치
 uv tool install huggingface-hub
 
+# Hugging Face 로그인 (Rate Limit 방지를 위해 권장)
+# 토큰 발급: https://huggingface.co/settings/tokens
+uv tool run hf auth login
+
 # 데이터셋 다운로드 (약 1.7GB)
-uv tool run hf download jhboyo/ppe-dataset --repo-type dataset --local-dir ./dataset/data
+uv tool run hf download jhboyo/ppe-dataset --repo-type dataset --local-dir ./dataset/data --max-workers 4
 ```
 
 ### 7. 데이터셋 YAML 생성
@@ -185,9 +189,29 @@ cat configs/ppe_dataset.yaml
 
 ## 훈련 완료 후
 
+### Hugging Face에 모델 업로드
+
+훈련된 모델을 Hugging Face에 업로드하여 관리할 수 있습니다. 데이터셋(`jhboyo/ppe-dataset`)과 분리된 별도의 모델 저장소를 사용하는 것을 권장합니다.
+
+```bash
+# 전체 훈련 결과 폴더 업로드 (새 저장소 자동 생성)
+uv tool run hf upload jhboyo/ppe-detection-model ./models/ppe_detection \
+    --repo-type model \
+    --commit-message "Add trained YOLOv8 PPE detection model"
+
+# 또는 best.pt 파일만 업로드
+uv tool run hf upload jhboyo/ppe-detection-model ./models/ppe_detection/weights/best.pt \
+    --repo-type model
+```
+
 ### 모델 다운로드
 
 훈련이 완료되면 `models/ppe_detection/weights/best.pt` 파일을 로컬로 다운로드하세요.
+
+```bash
+# Hugging Face에서 모델 다운로드
+uv tool run hf download jhboyo/ppe-detection-model --repo-type model --local-dir ./models
+```
 
 ### 추론 테스트
 
