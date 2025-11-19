@@ -12,6 +12,7 @@
 
 ## 연구 배경
 
+
 ### 산업안전보건기준에 관한 규칙 제32조 제1항
 
 > 건설 사업주는 낙하·충돌 등 위험이 있는 작업에서 근로자에게 **안전모·안전조끼 등 보호구를 지급하고 착용**하도록 해야 함.
@@ -28,6 +29,8 @@
 
 **AI 기반 자동 안전 모니터링 시스템**을 통해:
 - 실시간 PPE 착용 상태 자동 감지
+
+  <img src="models/test_run/train_batch0.jpg" width="600" alt="Train Batch Sample">
 - (미착용 시 즉각적인 알림)
 - (24시간 지속적인 모니터링 가능)
 
@@ -238,6 +241,8 @@ model.train(data='configs/ppe_dataset.yaml', epochs=100)
 
 **참고:** 디버깅용 파일들(`train_batch*.jpg`, `labels.jpg`, `args.yaml`)은 훈련 시작 시 자동 생성되며, `.gitignore`에 포함되어 Git에서 추적되지 않습니다.
 
+<img src="models/ppe_detection/training_curves.png" width="600" alt="Training Curves">
+
 ---
 
 ## 데이터셋
@@ -412,7 +417,14 @@ uv run python src/4_test/evaluate.py
 
 ## 참고 자료
 
+- 논문: `딥 러닝 기반 작업자 개인보호구 착용 및 얼굴 신원 확인 시스템에 관한 연구`
+- 논문: `Construction Site Hazards Identification Using Deep Learning and Computer Vision`
+- 논문: `YOLO(You Only Look Once) 모델별 건설 현장 위험 상태 및 객체 인식 성능 비교`
+- 특허: `빅데이터 기술 및 인공지능 기술에 기초하여 위험 시설물에 대한 실시간 정보를 모니터링함과 함께 상기 위험 시설물의 안전사고를 관리하는 위험 시설물 관리 시스템`
+- 특허: `인공지능기반 이륜자동차의 헬맷 미착용 단속시스템 및 방법`
+- 논문: `SYSTEM AND METHOD FOR AI VISUAL INSPECTION`
 - [YOLO 공식 문서](https://docs.ultralytics.com/)
-- [PyTorch 객체 탐지 튜토리얼](https://pytorch.org/tutorials/intermediate/torchvision_tutorial.html)
-- 프로젝트 논문: `딥 러닝 기반 작업자 개인보호구 착용 및 얼굴 신원 확인 시스템에 관한 연구`
+- [영상 - 중대재해법 비웃는 건설현장](https://www.youtube.com/watch?v=9rDv59u3cnc)
+- [스타트업 미스릴 브로셔](https://6542f7fa-15be-45d4-980e-46706516dc78.usrfiles.com/ugd/6542f7_9f7aaea5869742518907c1a3bf09ba8a.pdf)
+
 
