@@ -195,12 +195,12 @@ cat configs/ppe_dataset.yaml
 
 ```bash
 # 전체 훈련 결과 폴더 업로드 (새 저장소 자동 생성)
-uv tool run hf upload jhboyo/ppe-detection-model ./models/ppe_detection \
+uv tool run hf upload jhboyo/ppe_detection-model ./models/ppe_detection \
     --repo-type model \
     --commit-message "Add trained YOLOv8 PPE detection model"
 
 # 또는 best.pt 파일만 업로드
-uv tool run hf upload jhboyo/ppe-detection-model ./models/ppe_detection/weights/best.pt \
+uv tool run hf upload jhboyo/ppe_detection-model ./models/ppe_detection/weights/best.pt \
     --repo-type model
 ```
 
@@ -210,13 +210,13 @@ uv tool run hf upload jhboyo/ppe-detection-model ./models/ppe_detection/weights/
 
 ```bash
 # Hugging Face에서 모델 다운로드
-uv tool run hf download jhboyo/ppe-detection-model --repo-type model --local-dir ./models
+uv tool run hf download jhboyo/ppe_detection-model --repo-type model --local-dir ./models
 ```
 
 ### 추론 테스트
 
 ```bash
-uv run python src/3_inference/inference.py \
+uv run python src/4_inference/inference.py \
     --model models/ppe_detection/weights/best.pt \
     --input dataset/data/test/images/
 ```

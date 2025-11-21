@@ -239,7 +239,7 @@ uv run python src/2_training/train.py \
 
 #### 6-1. 추론 스크립트 수정
 ```python
-# src/3_inference/inference.py
+# src/4_inference/inference.py
 # 3 class 색상 코드 정의
 
 CLASS_COLORS = {
@@ -256,7 +256,7 @@ if class_id == 1:  # head 탐지
 #### 6-2. 테스트 추론
 ```bash
 # 이미지 추론 테스트
-uv run python src/3_inference/inference.py \
+uv run python src/4_inference/inference.py \
   --model models/ppe_detection_3class/weights/best.pt \
   --input dataset/data/test/images/sample.jpg
 ```

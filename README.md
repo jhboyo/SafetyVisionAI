@@ -258,6 +258,7 @@
 
 ### 결과 파일
 
+#### 모델 및 통계
 | 파일 | 위치 |
 |------|------|
 | 최고 성능 모델 | `models/ppe_detection/weights/best.pt` |
@@ -265,6 +266,14 @@
 | 훈련 통계 | `models/ppe_detection/results.csv` |
 | 혼동 행렬 | `models/ppe_detection/confusion_matrix.png` |
 | PR 곡선 | `models/ppe_detection/BoxPR_curve.png` |
+
+#### 보고서 (Markdown & PDF)
+| 파일 | 설명 |
+|------|------|
+| `모델학습결과보고서.md` / `.pdf` | 훈련 과정 및 결과 상세 분석 (11개 섹션) |
+| `모델테스트결과보고서.md` / `.pdf` | Test Dataset 평가 결과 (13개 섹션) |
+| `test_evaluation_report.md` | Test Set 평가 간단 요약 |
+| `test_results/` | Test Set 평가 시각화 파일들 |
 
 ---
 
@@ -310,7 +319,7 @@ uv run python src/2_training/train.py --data configs/ppe_dataset.yaml
 ### 추론
 ```bash
 # 이미지 추론
-uv run python src/3_inference/inference.py --model models/ppe_detection/weights/best.pt --input test_image.jpg
+uv run python src/4_inference/inference.py --model models/ppe_detection/weights/best.pt --input test_image.jpg
 ```
 
 ---
@@ -398,8 +407,8 @@ SafetyVisionAI/
 ├── src/                    # 소스 코드
 │   ├── 1_preprocess/      # 전처리 스크립트
 │   ├── 2_training/        # 훈련 스크립트
-│   ├── 3_inference/       # 추론 스크립트
-│   └── 4_test/            # 테스트 스크립트
+│   ├── 3_test/            # Test Dataset 평가 스크립트
+│   └── 4_inference/       # 추론 스크립트 (실제 사용)
 ├── notebooks/              # Jupyter 노트북
 ├── materials/              # 참고 자료
 ├── pyproject.toml          # 의존성 정의
@@ -468,7 +477,6 @@ SafetyVisionAI/
   - 파일: `test_evaluation_report.md`
   - 10개 섹션, 7개 시각화 포함
   - Validation vs Test 비교 분석
-  - 실무 적용 준비 완료 확인
 
 ### Phase 6: 추론 시스템 ⏳
 - [ ] **이미지 추론 구현** (3 class 대응)
@@ -479,20 +487,16 @@ SafetyVisionAI/
   - head 클래스 자동 감지
   - 경고 메시지 생성
   - 경고 로그 저장
-- [ ] **비디오 파일 추론** (예정)
-  - 프레임별 추론
-  - FPS 성능 측정
-- [ ] **웹캠 실시간 추론** (예정)
 - [ ] **결과 시각화**
   - 바운딩 박스 (클래스별 색상: helmet-파랑, head-빨강, vest-노랑)
   - 클래스명 + 신뢰도 표시
   - 경고 아이콘/텍스트 오버레이
   - 탐지 통계 (객체 수, 경고 수)
+- [ ] **웹캠 실시간 추론** (예정)
 
 ### Phase 7: 웹 인터페이스 ⏳
 - [ ] Streamlit 대시보드
-- [ ] 실시간 모니터링 화면
-- [ ] 경고 알림 시스템
+
 
 
 ---

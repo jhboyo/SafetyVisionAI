@@ -16,7 +16,7 @@ Validation set이 아닌 Test set으로 모델의 일반화 성능을 검증합�
 uv run python src/4_test/evaluate_test.py
 
 # 특정 모델 지정
-uv run python src/4_test/evaluate_test.py --model models/ppe-detection/weights/last.pt
+uv run python src/4_test/evaluate_test.py --model models/ppe_detection/weights/last.pt
 
 # Confidence threshold 변경
 uv run python src/4_test/evaluate_test.py --conf 0.25
@@ -288,7 +288,7 @@ def main():
     # 기본 경로 설정
     base_dir = Path(__file__).parent.parent.parent
 
-    default_model = base_dir / 'models' / 'ppe-detection' / 'weights' / 'best.pt'
+    default_model = base_dir / 'models' / 'ppe_detection' / 'weights' / 'best.pt'
     default_data = base_dir / 'configs' / 'ppe_dataset.yaml'
 
     # 명령줄 인자 파싱
@@ -301,7 +301,7 @@ def main():
         '--model',
         type=str,
         default=str(default_model),
-        help='평가할 모델 파일 경로 (default: models/ppe-detection/weights/best.pt)'
+        help='평가할 모델 파일 경로 (default: models/ppe_detection/weights/best.pt)'
     )
 
     parser.add_argument(
