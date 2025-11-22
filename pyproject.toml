@@ -16,4 +16,6 @@ dependencies = [
     "pandas>=2.1.0",
     "huggingface-hub>=0.20.0",
     "hf-transfer>=0.1.0",
+    "streamlit>=1.51.0",
+    "plotly>=6.5.0",
 ]

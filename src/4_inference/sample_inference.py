@@ -204,7 +204,7 @@ def detect_and_visualize(model, image_path, output_dir):
 
     # 전체 그림 상단에 통계 표시
     stats_text = f'Detections: Helmet={helmet_count}, Head={head_count}, Vest={vest_count}'
-    fig.suptitle(stats_text, fontsize=14, fontweight='bold')
+    fig.suptitle(stats_text, fontsize=11, fontweight='bold')
 
     # ========================================
     # 6. 결과 저장
