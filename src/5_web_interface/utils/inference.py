@@ -57,6 +57,28 @@ def load_model(model_path: str) -> Optional[YOLO]:
             st.info("💡 프로젝트 루트에서 다음 명령으로 학습을 먼저 수행하세요:\n```bash\nuv run python src/2_training/train.py\n```")
             return None
 
+        # Git LFS 포인터 파일 검증
+        with open(model_file, 'rb') as f:
+            first_bytes = f.read(100)
+            # LFS 포인터 파일은 "version https://git-lfs.github.com/spec/v1"로 시작
+            if first_bytes.startswith(b'version https://git-lfs'):
+                st.error(f"❌ 모델 파일이 Git LFS 포인터입니다!")
+                st.error("Streamlit Cloud는 Git LFS를 지원하지 않습니다.")
+                with st.expander("🔍 LFS 포인터 내용"):
+                    st.code(first_bytes.decode('utf-8', errors='ignore'))
+                st.info("""
+                **해결 방법:**
+                1. 로컬에서 모델을 Hugging Face Hub에 업로드
+                2. 앱 시작 시 HF Hub에서 모델 다운로드
+                3. 또는 GitHub에서 LFS 완전히 제거 후 재배포
+                """)
+                return None
+            # PyTorch 모델은 ZIP 파일 (PK로 시작)
+            elif not first_bytes.startswith(b'PK'):
+                st.warning(f"⚠️ 예상치 못한 파일 형식입니다")
+                with st.expander("🔍 파일 헤더"):
+                    st.code(f"First 50 bytes: {first_bytes[:50]}")
+
         # 모델 로드 (스피너 표시)
         with st.spinner(f"🔄 YOLOv8 모델 로딩 중... ({model_file.name})"):
             model = YOLO(str(model_file))
