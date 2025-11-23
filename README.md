@@ -1,3 +1,23 @@
+---
+title: Safety Vision AI
+emoji: 🏗️
+colorFrom: blue
+colorTo: green
+sdk: streamlit
+sdk_version: "1.51.0"
+app_file: src/5_web_interface/app.py
+pinned: false
+license: mit
+tags:
+  - computer-vision
+  - yolov8
+  - object-detection
+  - safety
+  - ppe-detection
+  - construction-safety
+short_description: YOLOv8 기반 건설현장 안전 장비(PPE) 착용 감지 시스템
+---
+
 # SafetyVisionAI
 
 딥러닝 기반 건설현장 안전 장비(PPE) 착용 모니터링 플랫폼
