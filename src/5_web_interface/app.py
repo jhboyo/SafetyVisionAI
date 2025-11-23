@@ -225,21 +225,25 @@ def main():
     # 사이드바 설정 가져오기
     settings = sidebar_config()
 
-    # 모델 로드 (캐싱됨)
-    model_path = get_model_path(settings['model'])
-    model = load_model(str(model_path))
-
     # 메인 컨텐츠 영역 - 이미지 업로드 섹션
     uploaded_files = render_complete_uploader(preview_columns=3, show_table=True)
 
-    # 업로드된 이미지가 있고 모델이 로드된 경우
-    if uploaded_files and model is not None:
+    # 업로드된 이미지가 있는 경우
+    if uploaded_files:
         st.markdown("---")
 
         # 탐지 시작 버튼
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             if st.button("🚀 탐지 시작", use_container_width=True, type="primary"):
+                # 모델 로드 (버튼 클릭 시점에 로드)
+                model_path = get_model_path(settings['model'])
+                model = load_model(str(model_path))
+
+                if model is None:
+                    st.error("❌ 모델 로드에 실패했습니다. 페이지를 새로고침하거나 관리자에게 문의하세요.")
+                    st.stop()
+
                 # 세션에서 업로드된 이미지 가져오기
                 if 'uploaded_files' in st.session_state and st.session_state.uploaded_files:
                     uploaded_files = st.session_state.uploaded_files
