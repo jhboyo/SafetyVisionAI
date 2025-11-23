@@ -1,18 +1,22 @@
-# Hugging Face Spaces용 경량화된 의존성
+# Streamlit Cloud & Hugging Face Spaces용 경량화된 의존성
 # Safety Vision AI - Streamlit Web Interface
+
+# ⚠️ CRITICAL: opencv-python-headless must be installed BEFORE ultralytics
+# ultralytics depends on opencv-python, but we need the headless version
+# for cloud deployment (no GUI dependencies)
+
+# 이미지 처리 - 먼저 설치 (opencv-python-headless가 opencv-python을 대체)
+opencv-python-headless==4.10.0.84
+pillow>=9.5.0
+
+# 데이터 처리
+numpy>=1.24.0,<2.0.0
+pandas>=2.1.0
 
 # 핵심 패키지
 ultralytics==8.3.229
 streamlit==1.51.0
 plotly==6.5.0
-
-# 이미지 처리
-pillow>=9.5.0
-opencv-python-headless>=4.8.0
-
-# 데이터 처리
-numpy>=1.24.0,<2.0.0
-pandas>=2.1.0
 
 # 유틸리티
 python-dotenv>=1.2.1
