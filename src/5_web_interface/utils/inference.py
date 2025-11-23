@@ -275,9 +275,28 @@ def get_model_path(model_name: str) -> Path:
     Returns:
         Path: 모델 파일의 전체 경로
     """
+    import os
+
     # 프로젝트 루트 찾기
-    current_file = Path(__file__)
-    project_root = current_file.parent.parent.parent.parent
+    current_file = Path(__file__).resolve()
+
+    # Hugging Face Spaces 환경 감지
+    # utils/inference.py 위치:
+    #   - 로컬: src/5_web_interface/utils/inference.py
+    #   - HF: utils/inference.py
+    if os.environ.get("SPACE_ID"):
+        # Hugging Face Spaces: utils/inference.py -> 루트
+        project_root = current_file.parent.parent
+    else:
+        # 로컬에서 models 디렉토리가 있는지 확인
+        # utils/inference.py -> utils -> 5_web_interface -> src -> SafetyVisionAI
+        potential_root = current_file.parent.parent
+        if (potential_root / "models").exists():
+            # 배포 환경 (deploy/huggingface)
+            project_root = potential_root
+        else:
+            # 로컬 개발 환경
+            project_root = current_file.parent.parent.parent.parent
 
     # 모델 경로
     model_path = project_root / "models" / "ppe_detection" / "weights" / model_name
