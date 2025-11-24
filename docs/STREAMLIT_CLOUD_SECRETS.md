@@ -18,8 +18,8 @@ Streamlit Cloud에서 Telegram Bot 알림 기능을 사용하려면 환경 변�
 
 ```toml
 # Telegram Bot 알림 설정
-TELEGRAM_BOT_TOKEN = "8572351389:AAHWObTgDzEGXrVcO5K6RAf2pydDzDIgJUQ"
-TELEGRAM_CHAT_ID = "1955008331"
+TELEGRAM_BOT_TOKEN = ""
+TELEGRAM_CHAT_ID = ""
 TELEGRAM_ALERTS_ENABLED = "true"
 ```
 
