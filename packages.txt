@@ -1,8 +1,5 @@
-# OpenCV dependencies
 libgl1-mesa-glx
 libglib2.0-0
-
-# FFmpeg and video codecs (required by streamlit-webrtc, PyAV)
 ffmpeg
 libavcodec-dev
 libavformat-dev
@@ -10,12 +7,8 @@ libavutil-dev
 libavdevice-dev
 libswscale-dev
 libswresample-dev
-
-# WebRTC dependencies (required by aiortc)
 libsrtp2-dev
 libopus-dev
 libvpx-dev
-
-# Audio dependencies (required by pygame)
 libsdl2-mixer-2.0-0
 libportaudio2
