@@ -20,23 +20,26 @@ import os
 
 class VoiceAlertManager:
     """
-    AI 음성 경고 시스템 매니저
-    
+    AI 음성 경고 시스템 매니저 (Streamlit 웹앱용)
+
     PPE 미착용 감지 시 한국어 음성 경고를 재생합니다.
-    중복 재생 방지를 위한 쿨다운 타이머를 포함합니다.
+    주의: Streamlit 웹앱에서는 서버에서만 음성이 재생되고 브라우저로는 전달되지 않습니다.
+    실제 음성 경고는 OpenCV 웹캠 스크립트(webcam_inference.py)를 사용하세요.
     """
-    
+
     def __init__(self, cooldown_seconds: int = 10):
         """
+        음성 경고 매니저 초기화
+
         Args:
-            cooldown_seconds: 같은 경고의 재생 간격 (초)
+            cooldown_seconds: 같은 경고의 재생 간격 (초, 기본값: 10초)
         """
-        self.cooldown_seconds = cooldown_seconds
-        self.last_alert_time = {}
-        self.lock = threading.Lock()
-        self.audio_cache = {}  # 음성 파일 캐시
-        
-        # pygame mixer 초기화
+        self.cooldown_seconds = cooldown_seconds  # 쿨다운 시간
+        self.last_alert_time = {}  # 마지막 경고 시간 기록
+        self.lock = threading.Lock()  # 스레드 안전성을 위한 락
+        self.audio_cache = {}  # 생성된 음성 파일 캐시
+
+        # pygame mixer 초기화 시도
         try:
             pygame.mixer.init()
             self.enabled = True
@@ -288,7 +291,7 @@ class PPEVideoProcessor(VideoProcessorBase):
         total_workers = helmet_count + head_count
         helmet_rate = (helmet_count / total_workers * 100) if total_workers > 0 else 0
         
-        # 안전 수준 평가 및 음성 경고
+        # 안전 수준 평가 및 음성 경고 (서버에서 재생, 브라우저에는 들리지 않음)
         if total_workers > 0:
             if helmet_rate >= 90:
                 safety_level = "Excellent"
@@ -501,14 +504,79 @@ def render_webcam_detector(model, conf_threshold: float, iou_threshold: float):
                     if stats['total_workers'] > 0:
                         st.markdown(f"### 👷 작업자: {stats['total_workers']}명")
                         st.markdown(f"### 📈 헬멧 착용률: {stats['helmet_rate']:.1f}%")
-                        
+
                         safety_level = stats['safety_level']
+                        head_count = stats['head']
+
                         if safety_level == "Excellent":
                             st.success(f"✅ **안전 수준: {safety_level}**")
+
                         elif safety_level == "Caution":
-                            st.warning(f"⚠️ **안전 수준: {safety_level}**")
+                            # 주의 수준 - 강조된 경고
+                            st.markdown("""
+                                <div style="
+                                    background-color: #FFA500;
+                                    color: white;
+                                    padding: 20px;
+                                    border-radius: 10px;
+                                    text-align: center;
+                                    font-size: 24px;
+                                    font-weight: bold;
+                                    margin: 10px 0;
+                                    border: 3px solid #FF8C00;
+                                ">
+                                    ⚠️ 주의: 헬멧 미착용자 감지됨
+                                </div>
+                            """, unsafe_allow_html=True)
+                            st.warning(f"⚠️ **안전 수준: {safety_level}** - 헬멧 미착용: {head_count}명")
+
                         elif safety_level == "Dangerous":
-                            st.error(f"🚨 **안전 수준: {safety_level}**")
+                            # 위험 수준 - 깜빡이는 전체 화면 경고
+                            st.markdown("""
+                                <style>
+                                @keyframes blink {
+                                    0%, 50% { opacity: 1; }
+                                    25%, 75% { opacity: 0.3; }
+                                }
+                                .danger-alert {
+                                    animation: blink 1.5s infinite;
+                                }
+                                </style>
+                                <div class="danger-alert" style="
+                                    background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%);
+                                    color: white;
+                                    padding: 30px;
+                                    border-radius: 15px;
+                                    text-align: center;
+                                    font-size: 32px;
+                                    font-weight: bold;
+                                    margin: 10px 0;
+                                    border: 5px solid #8B0000;
+                                    box-shadow: 0 0 30px rgba(255,0,0,0.5);
+                                ">
+                                    🚨 위험! 즉시 안전 조치 필요 🚨
+                                    <br>
+                                    <span style="font-size: 24px;">헬멧 미착용자: {head_count}명</span>
+                                </div>
+                            """.format(head_count=head_count), unsafe_allow_html=True)
+                            st.error(f"🚨 **안전 수준: {safety_level}** - 즉각적인 조치가 필요합니다!")
+
+                            # 추가 경고 메시지
+                            st.markdown("""
+                                <div style="
+                                    background-color: #FFEBEE;
+                                    color: #C62828;
+                                    padding: 15px;
+                                    border-radius: 5px;
+                                    border-left: 5px solid #C62828;
+                                    margin: 10px 0;
+                                ">
+                                    <strong>⚠️ 안전 관리자에게 즉시 알림:</strong><br>
+                                    • 작업 현장의 안전 수칙 위반 감지<br>
+                                    • 헬멧 미착용자가 {head_count}명 확인됨<br>
+                                    • 즉시 안전 장비 착용을 지시하세요
+                                </div>
+                            """.format(head_count=head_count), unsafe_allow_html=True)
                     else:
                         st.info("ℹ️ 작업자가 탐지되지 않았습니다")
                     

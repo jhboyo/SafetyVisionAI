@@ -1,6 +1,6 @@
 # Streamlit Cloud & Hugging Face Spaces용 경량화된 의존성
 # Safety Vision AI - Streamlit Web Interface
-# Updated: 2025-11-23 - Force rebuild for LFS fix
+# Updated: 2025-11-25 - Added WebRTC support
 
 # ⚠️ CRITICAL: opencv-python-headless must be installed BEFORE ultralytics
 # ultralytics depends on opencv-python, but we need the headless version
@@ -18,6 +18,15 @@ pandas>=2.1.0
 ultralytics==8.3.229
 streamlit==1.51.0
 plotly==6.5.0
+
+# 웹캠 실시간 탐지 (WebRTC)
+streamlit-webrtc>=0.47.0
+av>=10.0.0  # PyAV for video encoding/decoding
+aiortc>=1.5.0  # WebRTC implementation
+
+# 음성 경고 시스템
+gTTS>=2.5.0
+pygame>=2.5.0
 
 # 유틸리티
 python-dotenv>=1.2.1
