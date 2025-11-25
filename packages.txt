@@ -1,2 +1,21 @@
+# OpenCV 관련
 libgl1-mesa-glx
 libglib2.0-0
+
+# FFmpeg 및 비디오 코덱 (streamlit-webrtc, PyAV 필요)
+ffmpeg
+libavcodec-dev
+libavformat-dev
+libavutil-dev
+libavdevice-dev
+libswscale-dev
+libswresample-dev
+
+# WebRTC 관련 (aiortc)
+libsrtp2-dev
+libopus-dev
+libvpx-dev
+
+# 오디오 (pygame)
+libsdl2-mixer-2.0-0
+libportaudio2

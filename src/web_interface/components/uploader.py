@@ -169,6 +169,11 @@ def render_image_uploader(key: str = "image_uploader") -> Optional[List]:
             # 세션 상태에 저장
             st.session_state.uploaded_files = valid_files
 
+            # 새 파일 업로드 시 이전 추론 결과 초기화
+            st.session_state.inference_results = None
+            st.session_state.inference_time = 0
+            st.session_state.inference_fps = 0
+
             return valid_files
 
     # 업로더가 비어있고 세션 상태에 파일이 있으면 세션 상태 반환

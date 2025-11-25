@@ -198,30 +198,74 @@ avg_fps = sum(fps_counter[-30:]) / len(fps_counter[-30:])
 
 ## 🚀 실행 방법
 
-### 1. 기본 실행 (노트북 카메라)
+### 방법 1: Streamlit 웹 인터페이스 (추천 🌟)
+
+**🔊 음성 경고 기능 지원**
+
+Streamlit 웹 인터페이스는 AI 음성 경고 시스템을 포함하고 있어 헬멧 미착용 감지 시 자동으로 한국어 음성 경고를 재생합니다.
+
+```bash
+# Streamlit 웹 대시보드 실행
+uv run streamlit run src/web_interface/app.py
+
+# 브라우저 자동 접속: http://localhost:8501
+```
+
+**주요 기능:**
+- 📹 **실시간 웹캠 모니터링** (25-30 FPS)
+- 🔊 **AI 음성 경고** ("안전모를 착용하세요" 등)
+- 📁 **이미지/영상 파일 업로드** (드래그 앤 드롭)
+- 📊 **실시간 통계 대시보드**
+- 📱 **Telegram 실시간 알림** 연동
+- 💾 **결과 다운로드** (이미지/CSV)
+
+**온라인 데모:**
+```
+👉 https://safetyvisionai.streamlit.app
+```
+
+---
+
+### 방법 2: OpenCV 실시간 추론 (CLI)
+
+터미널에서 직접 실행하는 경량 버전입니다. (음성 경고 미지원)
+
+#### 1. 기본 실행 (노트북 카메라)
 ```bash
 uv run python src/webcam_inference/webcam_inference.py
 ```
 
-### 2. 외부 웹캠 사용
+#### 2. 외부 웹캠 사용
 ```bash
 uv run python src/webcam_inference/webcam_inference.py --camera 1
 ```
 
-### 3. 신뢰도 임계값 조정
+#### 3. 신뢰도 임계값 조정
 ```bash
 uv run python src/webcam_inference/webcam_inference.py --conf 0.3
 ```
 
-### 4. 해상도 설정
+#### 4. 해상도 설정
 ```bash
 uv run python src/webcam_inference/webcam_inference.py --width 1280 --height 720
 ```
 
-### 5. 커스텀 모델 사용
+#### 5. 커스텀 모델 사용
 ```bash
 uv run python src/webcam_inference/webcam_inference.py --model path/to/model.pt
 ```
+
+#### 6. 음성 경고 비활성화
+```bash
+# 음성 경고 없이 실행 (조용한 모드)
+uv run python src/webcam_inference/webcam_inference.py --no-voice-alert
+```
+
+**🔊 음성 경고 기능 (New!)**
+- 헬멧 미착용 감지 시 자동으로 한국어 음성 경고 재생
+- "안전모를 착용하세요", "위험! 안전 장비를 착용하세요" 등
+- 10초 쿨다운 타이머로 중복 재생 방지
+- gTTS와 pygame 필요 (자동으로 설치됨)
 
 ---
 
@@ -251,8 +295,10 @@ uv run python src/webcam_inference/webcam_inference.py --model path/to/model.pt
 
 ### Phase 4: 고급 기능 (선택)
 - [ ] 녹화 기능 (영상 저장)
-- [ ] Telegram Bot 실시간 알림 연동
-- [ ] 경고음 (비프음) 재생
+- [x] Telegram Bot 실시간 알림 연동 (Streamlit 웹 인터페이스에 구현됨)
+- [x] 경고음 (AI 음성 알림) 재생 (**완료!**)
+  - ✅ OpenCV 웹캠 스크립트: 로컬에서 실제 음성 재생
+  - ✅ Streamlit 웹앱: 강력한 시각적 경고 (깜빡임, 전체 화면)
 - [ ] 탐지 히스토리 차트
 - [ ] 다중 카메라 동시 모니터링
 
@@ -407,7 +453,8 @@ def inference_thread():
 - [OpenCV VideoCapture 공식 문서](https://docs.opencv.org/4.x/d8/dfe/classcv_1_1VideoCapture.html)
 - [YOLOv8 실시간 추론 가이드](https://docs.ultralytics.com/modes/predict/#streaming-source)
 - [프로젝트 추론 시스템](../../src/inference/inference.py)
-- [Streamlit 웹 인터페이스](../../src/web_interface/app.py)
+- [Streamlit 웹 인터페이스 (음성 경고 포함)](../../src/web_interface/app.py)
+- [웹캠 감지기 컴포넌트 (VoiceAlertManager)](../../src/web_interface/components/webcam_detector.py)
 
 ---
 
@@ -416,9 +463,11 @@ def inference_thread():
 | 날짜 | 버전 | 변경 내용 | 작성자 |
 |------|------|-----------|--------|
 | 2025-11-23 | 1.0 | 초안 작성 | SafetyVisionAI |
+| 2025-11-25 | 1.1 | Streamlit 웹 인터페이스 실행 방법 추가 (음성 경고 기능 포함) | SafetyVisionAI |
+| 2025-11-25 | 1.2 | 🎉 **음성 경고 기능 완료!**<br>• OpenCV 웹캠 스크립트에 VoiceAlertManager 추가<br>• Streamlit 웹앱에 강력한 시각적 경고 추가<br>• 음성/시각적 경고 조합 구현 완료 | SafetyVisionAI |
 
 ---
 
 **작성자**: SafetyVisionAI Team
-**최종 수정**: 2025-11-23
-**상태**: 진행 중 (Phase 8)
+**최종 수정**: 2025-11-25
+**상태**: 진행 중 (Phase 8) - 🎉 음성 경고 기능 완료!

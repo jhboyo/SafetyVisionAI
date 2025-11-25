@@ -276,6 +276,7 @@ def draw_help_overlay(frame: np.ndarray) -> np.ndarray:
         "P - Pause/Resume",
         "+ - Increase Confidence",
         "- - Decrease Confidence",
+        "V - Test Voice Alert",
         "H - Toggle Help",
         "",
         "Press H to close"
